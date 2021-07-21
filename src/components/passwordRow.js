@@ -41,15 +41,23 @@ export default function PasswordRow(props) {
   );
 
   return (
-    <div className="row">
-      {Image}
-      {Name}
-      {Password}
-      {Url}
-      <MdRemoveRedEye
-        onClick={() => setPasswordVisible(!isPasswordVisible)}
-      ></MdRemoveRedEye>
-      <MdMoreVert></MdMoreVert>
+    <div className="mainContainer">
+      <div className="row container">
+        {Image}
+        {Name}
+        <div className="column">
+          <div className="urlTag">Url</div> {Url}
+        </div>
+
+        {Password}
+      </div>
+      <div className="row iconContainer">
+        <MdRemoveRedEye
+          className="showPassword"
+          onClick={() => setPasswordVisible(!isPasswordVisible)}
+        ></MdRemoveRedEye>
+        <MdMoreVert className="moreOptions"></MdMoreVert>
+      </div>
     </div>
   );
 }
