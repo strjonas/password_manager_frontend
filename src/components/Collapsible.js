@@ -1,7 +1,7 @@
 import React from "react";
 import { useRef, useState } from "react";
 import "./Collapsible.css";
-import { MdKeyboardArrowDown } from "react-icons/md";
+import { MdKeyboardArrowDown, MdKeyboardArrowLeft } from "react-icons/md";
 
 export default function Collapsible(props) {
   const [isOpen, setIsOpen] = useState(false);
@@ -14,9 +14,16 @@ export default function Collapsible(props) {
           {props.label}
         </button>
         <div className="iconButtonDeCollapse">
-          <MdKeyboardArrowDown
-            onClick={() => setIsOpen(!isOpen)}
-          ></MdKeyboardArrowDown>
+          {!isOpen && (
+            <MdKeyboardArrowDown
+              onClick={() => setIsOpen(!isOpen)}
+            ></MdKeyboardArrowDown>
+          )}
+          {isOpen && (
+            <MdKeyboardArrowLeft
+              onClick={() => setIsOpen(!isOpen)}
+            ></MdKeyboardArrowLeft>
+          )}
         </div>
       </div>
       <div className="stroke"></div>

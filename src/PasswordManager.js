@@ -2,10 +2,12 @@ import React from "react";
 import { useState, useEffect } from "react";
 import Collapsible from "./components/Collapsible";
 import "./index.scss";
+import { MdClose } from "react-icons/md";
+import IconButton from "@material-ui/core/IconButton";
+import Snackbar from "@material-ui/core/Snackbar";
 import { v4 as uuidv4 } from "uuid";
 import { REACT_APP_API } from "./constants";
 import PasswordRow from "./components/passwordRow";
-import { isCompositeComponent } from "react-dom/cjs/react-dom-test-utils.production.min";
 
 const API = REACT_APP_API;
 
@@ -14,7 +16,19 @@ export default function PasswordManager() {
   const [password, setPassword] = useState("");
   const [url, setUrl] = useState("");
 
+  const [message, setMessage] = useState("");
+
+  const [open, setOpen] = useState(false);
+
   const [passwords, setPasswords] = useState([]);
+
+  function handleClose(event, reason) {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpen(false);
+  }
 
   useEffect(() => {
     getPasswords();
@@ -38,16 +52,49 @@ export default function PasswordManager() {
     setPasswords(data);
   }
 
+  function onkeypress(e) {
+    if (e.key === "Enter") {
+      handelAdd();
+    }
+  }
+
+  function showToast(message) {
+    setMessage(message);
+    setOpen(true);
+  }
+
   async function handelAdd() {
     const id = uuidv4();
+    if (password.length < 8) {
+      setMessage("Password is too short!");
+      setOpen(true);
+      return;
+    }
+    if (name.length < 4) {
+      setMessage("Name is too short!");
+      setOpen(true);
+      return;
+    }
+    if (url === "") setUrl("none");
     const body = { id, password, name, url };
+    try {
+      await fetch(`${API}/new`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
 
-    const answer = await fetch(`${API}/new`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
-    });
-    // show something as feedback (success or not)
+      showToast("Successfully added!");
+
+      setPassword("");
+      setName("");
+      setUrl("");
+
+      getPasswords();
+    } catch (error) {
+      console.log(error);
+      showToast("Something went wrong!");
+    }
   }
 
   return (
@@ -72,6 +119,7 @@ export default function PasswordManager() {
           </div>
           <div className="row">
             <input
+              onKeyPress={(e) => onkeypress(e)}
               value={password}
               onChange={onPasswordChange}
               placeholder="password"
@@ -91,6 +139,20 @@ export default function PasswordManager() {
           return <PasswordRow key={password.id} props={password} />;
         })}
       </div>
+      <Snackbar
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        open={open}
+        autoHideDuration={2000}
+        onClose={handleClose}
+        message={message}
+        action={
+          <React.Fragment>
+            <IconButton onClick={handleClose}>
+              <MdClose style={{ color: "white" }} />
+            </IconButton>
+          </React.Fragment>
+        }
+      />
     </div>
   );
 }
