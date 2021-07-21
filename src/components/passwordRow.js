@@ -1,16 +1,27 @@
 import React from "react";
 import "./passwordRow.scss";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { MdRemoveRedEye, MdMoreVert } from "react-icons/md";
-
-function getPassword() {
-  var password = "";
-
-  return password;
-}
+import { REACT_APP_API } from "../constants";
 
 export default function PasswordRow(props) {
   const [isPasswordVisible, setPasswordVisible] = useState(false);
+  const [password, setPassword] = useState("");
+
+  useEffect(() => {
+    getPassword();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  async function getPassword() {
+    try {
+      var res = await fetch(`${REACT_APP_API}/passwords/${props.id}`);
+      const data = await res.text();
+      setPassword(data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   props = props.props;
   const imageUrl =
@@ -29,9 +40,7 @@ export default function PasswordRow(props) {
   const Name = <div className="name">{props.name}</div>;
 
   const Password = (
-    <div className="password">
-      {isPasswordVisible ? getPassword() : "********"}
-    </div>
+    <div className="password">{isPasswordVisible ? password : "●●●●●●●●"}</div>
   );
 
   const Url = (
@@ -54,7 +63,10 @@ export default function PasswordRow(props) {
       <div className="row iconContainer">
         <MdRemoveRedEye
           className="showPassword"
-          onClick={() => setPasswordVisible(!isPasswordVisible)}
+          onClick={() => {
+            if (password === "") getPassword();
+            setPasswordVisible(!isPasswordVisible);
+          }}
         ></MdRemoveRedEye>
         <MdMoreVert className="moreOptions"></MdMoreVert>
       </div>
