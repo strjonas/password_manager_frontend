@@ -8,17 +8,11 @@ import {
   MdModeEdit,
   MdClose,
 } from "react-icons/md";
-import IconButton from "@material-ui/core/IconButton";
-import Snackbar from "@material-ui/core/Snackbar";
 import { REACT_APP_API } from "../constants";
 
-export default function PasswordRow(props, refresh) {
+export default function PasswordRow({ props, refresh, showSnackBar }) {
   const [isPasswordVisible, setPasswordVisible] = useState(false);
   const [password, setPassword] = useState("");
-
-  const [open, setOpen] = useState(false);
-
-  const [message, setMessage] = useState("");
 
   const [showDropdown, setShowDropdown] = useState(false);
 
@@ -26,14 +20,6 @@ export default function PasswordRow(props, refresh) {
     getPassword();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  function handleClose(event, reason) {
-    if (reason === "clickaway") {
-      return;
-    }
-
-    setOpen(false);
-  }
 
   function showDropdownFunc() {
     setShowDropdown(true);
@@ -43,23 +29,18 @@ export default function PasswordRow(props, refresh) {
     setShowDropdown(false);
   }
 
-  function showSnackbar(message) {
-    setMessage(message);
-    setOpen(true);
-  }
-
   async function deleteEntity() {
     try {
       const res = await fetch(`${REACT_APP_API}/delpasswords/${props.id}`);
       const data = await res.text();
       if (data === "success") {
-        showSnackbar("successfully deleted");
+        showSnackBar("successfully deleted");
       } else {
-        showSnackbar("Something went wrong!");
+        showSnackBar("Something went wrong!");
       }
     } catch (error) {
       console.log(error);
-      showSnackbar("Something went wrong!");
+      showSnackBar("Something went wrong!");
     }
     hideDropdownFunc();
     refresh();
@@ -81,8 +62,6 @@ export default function PasswordRow(props, refresh) {
       console.log(error);
     }
   }
-
-  props = props.props;
   const imageUrl =
     props.url === undefined
       ? "jonas-strabel.de"
@@ -149,20 +128,6 @@ export default function PasswordRow(props, refresh) {
             </div>
           )}
         </div>
-        <Snackbar
-          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-          open={open}
-          autoHideDuration={2000}
-          onClose={handleClose}
-          message={message}
-          action={
-            <React.Fragment>
-              <IconButton onClick={handleClose}>
-                <MdClose style={{ color: "white" }} />
-              </IconButton>
-            </React.Fragment>
-          }
-        />
       </div>
     </>
   );

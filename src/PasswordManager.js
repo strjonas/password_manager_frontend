@@ -2,7 +2,7 @@ import React from "react";
 import { useState, useEffect } from "react";
 import Collapsible from "./components/Collapsible";
 import "./index.scss";
-import { MdClose } from "react-icons/md";
+import { MdClose, MdSearch } from "react-icons/md";
 import IconButton from "@material-ui/core/IconButton";
 import Snackbar from "@material-ui/core/Snackbar";
 import { v4 as uuidv4 } from "uuid";
@@ -22,12 +22,18 @@ export default function PasswordManager() {
 
   const [passwords, setPasswords] = useState([]);
 
+  const [search, setSearch] = useState([]);
+
   function handleClose(event, reason) {
     if (reason === "clickaway") {
       return;
     }
 
     setOpen(false);
+  }
+
+  function onSearchChange(ev) {
+    setSearch(ev.target.value);
   }
 
   useEffect(() => {
@@ -132,8 +138,25 @@ export default function PasswordManager() {
           </div>
         </div>
       </Collapsible>
+      <div className="center">
+        {" "}
+        <hr class="rounded"></hr>
+      </div>
+      <div className="searchBar row">
+        <input
+          value={search}
+          onChange={onSearchChange}
+          placeholder="Search"
+          type="text"
+          className="searchInput"
+        ></input>
+        <MdSearch className="searchIcon"></MdSearch>
+      </div>
+      <div className="center">
+        {" "}
+        <hr class="rounded"></hr>
+      </div>
 
-      <div className="searchBar row"></div>
       <div className="passwordList column ">
         {passwords.map((password) => {
           return (
@@ -141,6 +164,7 @@ export default function PasswordManager() {
               key={password.id}
               props={password}
               refresh={getPasswords}
+              showSnackBar={showToast}
             />
           );
         })}
