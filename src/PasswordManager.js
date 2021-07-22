@@ -136,7 +136,13 @@ export default function PasswordManager() {
       <div className="searchBar row"></div>
       <div className="passwordList column ">
         {passwords.map((password) => {
-          return <PasswordRow key={password.id} props={password} />;
+          return (
+            <PasswordRow
+              key={password.id}
+              props={password}
+              refresh={getPasswords}
+            />
+          );
         })}
       </div>
       <Snackbar
