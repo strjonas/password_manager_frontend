@@ -234,10 +234,14 @@ export default function PasswordManager() {
           </button>
         )}
         {passwords
-          .filter((password) =>
-            password.name
-              .toLowerCase()
-              .includes(search.toString().toLowerCase())
+          .filter(
+            (password) =>
+              password.name
+                .toLowerCase()
+                .includes(search.toString().toLowerCase()) ||
+              password.url
+                .toLowerCase()
+                .includes(search.toString().toLowerCase())
           )
           .map((password) => {
             return (

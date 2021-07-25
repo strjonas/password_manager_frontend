@@ -4,7 +4,7 @@ import PasswordManager from "./PasswordManager";
 function App() {
   return (
     <div className="App">
-      <PasswordManager />
+      <PasswordManager />{" "}
     </div>
   );
 }
