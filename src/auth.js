@@ -1,7 +1,7 @@
 import React from "react";
 import { useState } from "react";
 
-export default function Auth() {
+export default function Auth({ refresh }) {
   const [signedIn, setSignedIn] = useState(
     localStorage.getItem("key") === null
   );
@@ -11,17 +11,24 @@ export default function Auth() {
   }
 
   return (
-    <>{signedIn ? <SignIn notify={notify} /> : <SignOut notify={notify} />}</>
+    <>
+      {signedIn ? (
+        <SignIn refresh={refresh} notify={notify} />
+      ) : (
+        <SignOut refresh={refresh} notify={notify} />
+      )}
+    </>
   );
 }
 
-function SignIn({ notify }) {
+function SignIn({ notify, refresh }) {
   const [key, setkey] = useState("");
 
   function handleClick() {
     if (key.toString().length > 0) {
       localStorage.setItem("key", key);
       notify();
+      refresh();
     }
   }
 
@@ -30,6 +37,7 @@ function SignIn({ notify }) {
       <div className="row signInContainer">
         <input
           value={key}
+          type="password"
           onChange={(e) => {
             setkey(e.target.value);
           }}
@@ -53,10 +61,11 @@ function SignIn({ notify }) {
   );
 }
 
-function SignOut({ notify }) {
+function SignOut({ notify, refresh }) {
   function handleSignOut() {
     localStorage.removeItem("key");
     notify();
+    refresh();
   }
   return (
     <div className="signOutContainer">

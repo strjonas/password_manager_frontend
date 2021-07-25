@@ -31,7 +31,11 @@ export default function PasswordRow({ props, refresh, showSnackBar }) {
 
   async function deleteEntity() {
     try {
-      const res = await fetch(`${REACT_APP_API}/delpasswords/${props.id}`);
+      const res = await fetch(
+        `${REACT_APP_API}/delpasswords/${props.id}/${localStorage.getItem(
+          "key"
+        )}`
+      );
       const data = await res.text();
       if (data === "success") {
         showSnackBar("successfully deleted");
@@ -51,10 +55,16 @@ export default function PasswordRow({ props, refresh, showSnackBar }) {
 
   async function getPassword() {
     try {
-      var res = await fetch(`${REACT_APP_API}/passwords/${props.id}`);
+      var res = await fetch(
+        `${REACT_APP_API}/passwords/${props.id}/${localStorage.getItem("key")}`
+      );
       const data = await res.text();
       if (data === "error") {
         setPassword("This entity is corrupted, please make a new entry!");
+        return;
+      }
+      if (data.length > 100) {
+        setPassword("Something went wrong");
         return;
       }
       setPassword(data);

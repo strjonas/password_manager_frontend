@@ -58,6 +58,7 @@ export default function PasswordManager() {
   async function getPasswords() {
     if (localStorage.getItem("key") === null) {
       showToast("Please Login first!");
+      setPasswords([]);
       return;
     }
     const key = localStorage.getItem("key");
@@ -158,7 +159,7 @@ export default function PasswordManager() {
 
   return (
     <div className="innerDiv column">
-      <Auth></Auth>
+      <Auth refresh={getPasswords}></Auth>
       <Collapsible label="New Password">
         <div className="inputContainer">
           <div className="urlAndName row">
