@@ -56,9 +56,21 @@ export default function PasswordManager() {
   }
 
   async function getPasswords() {
-    const pwds = await fetch(`${API}/allkeys`);
-    const data = Array.from(await pwds.json());
-    setPasswords(data);
+    if (localStorage.getItem("key") === null) {
+      showToast("Please Login first!");
+      return;
+    }
+    const key = localStorage.getItem("key");
+    const pwds = await fetch(`${API}/allkeys/${key}`);
+    var data;
+
+    data = await pwds.text();
+    if (data === "Wrong Password") {
+      setPasswords([]);
+      showToast("Wrong Login Password");
+      return;
+    }
+    setPasswords(Array.from(JSON.parse(data)));
   }
 
   function onkeypress(e) {
@@ -84,20 +96,29 @@ export default function PasswordManager() {
       setOpen(true);
       return;
     }
+    if (localStorage.getItem("key") === null) {
+      showToast("Please Login first!");
+      return;
+    }
     if (url === "") setUrl("none");
     const body = { id, password, name, url };
     try {
-      await fetch(`${API}/new`, {
+      const key = localStorage.getItem("key");
+      const answer = await fetch(`${API}/new/${key}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       });
 
+      const data = await answer.text();
+      if (data === "Wrong Password") {
+        setPassword("");
+        setName("");
+        setUrl("");
+        showToast("Wrong Login Password");
+        return;
+      }
       showToast("Successfully added!");
-
-      setPassword("");
-      setName("");
-      setUrl("");
 
       getPasswords();
     } catch (error) {
