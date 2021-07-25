@@ -140,13 +140,16 @@ export default function PasswordManager() {
       </Collapsible>
       <div className="center">
         {" "}
-        <hr class="rounded"></hr>
+        <hr className="rounded"></hr>
       </div>
       <div className="searchBar row">
         <input
           value={search}
           onChange={onSearchChange}
           placeholder="Search"
+          onKeyPress={(e) => {
+            if (e.key === "Enter") e.target.blur();
+          }}
           type="text"
           className="searchInput"
         ></input>
@@ -154,20 +157,26 @@ export default function PasswordManager() {
       </div>
       <div className="center">
         {" "}
-        <hr class="rounded"></hr>
+        <hr className="rounded"></hr>
       </div>
 
       <div className="passwordList column ">
-        {passwords.map((password) => {
-          return (
-            <PasswordRow
-              key={password.id}
-              props={password}
-              refresh={getPasswords}
-              showSnackBar={showToast}
-            />
-          );
-        })}
+        {passwords
+          .filter((password) =>
+            password.name
+              .toLowerCase()
+              .includes(search.toString().toLowerCase())
+          )
+          .map((password) => {
+            return (
+              <PasswordRow
+                key={password.id}
+                props={password}
+                refresh={getPasswords}
+                showSnackBar={showToast}
+              />
+            );
+          })}
       </div>
       <Snackbar
         anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
