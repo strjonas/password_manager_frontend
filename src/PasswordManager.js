@@ -2,7 +2,7 @@ import React from "react";
 import { useState, useEffect } from "react";
 import Collapsible from "./components/Collapsible";
 import "./index.scss";
-import { MdClose, MdSearch } from "react-icons/md";
+import { MdClose, MdSearch, MdRemoveRedEye } from "react-icons/md";
 import IconButton from "@material-ui/core/IconButton";
 import Snackbar from "@material-ui/core/Snackbar";
 import { v4 as uuidv4 } from "uuid";
@@ -23,6 +23,8 @@ export default function PasswordManager() {
   const [passwords, setPasswords] = useState([]);
 
   const [search, setSearch] = useState([]);
+
+  var [pwShow, setPwShow] = useState(0);
 
   function handleClose(event, reason) {
     if (reason === "clickaway") {
@@ -103,6 +105,35 @@ export default function PasswordManager() {
     }
   }
 
+  function password_generator(len) {
+    var length = len ? len : 10;
+    var string = "abcdefghijklmnopqrstuvwxyz";
+    var numeric = "0123456789";
+    var punctuation = "!@#$%^&*()_+~`|}{[]:;?><,./-=";
+    var password = "";
+    var character = "";
+    while (password.length < length) {
+      var entity1 = Math.ceil(string.length * Math.random() * Math.random());
+      var entity2 = Math.ceil(numeric.length * Math.random() * Math.random());
+      var entity3 = Math.ceil(
+        punctuation.length * Math.random() * Math.random()
+      );
+      var hold = string.charAt(entity1);
+      hold = password.length % 2 === 0 ? hold.toUpperCase() : hold;
+      character += hold;
+      character += numeric.charAt(entity2);
+      character += punctuation.charAt(entity3);
+      password = character;
+    }
+    password = password
+      .split("")
+      .sort(function () {
+        return 0.5 - Math.random();
+      })
+      .join("");
+    return password.substr(0, len);
+  }
+
   return (
     <div className="innerDiv column">
       <Collapsible label="New Password">
@@ -130,8 +161,40 @@ export default function PasswordManager() {
               onChange={onPasswordChange}
               placeholder="password"
               type="password"
+              id="passwordInput"
               className="passwordInput"
             ></input>
+            <div className="passwordShowAddDiv">
+              <MdRemoveRedEye
+                onClick={() => {
+                  function show() {
+                    var p = document.getElementById("passwordInput");
+                    p.setAttribute("type", "text");
+                  }
+
+                  function hide() {
+                    var p = document.getElementById("passwordInput");
+                    p.setAttribute("type", "password");
+                  }
+                  if (pwShow === 0) {
+                    setPwShow(1);
+                    show();
+                  } else {
+                    setPwShow(0);
+                    hide();
+                  }
+                }}
+                className="showPasswordAdd"
+              ></MdRemoveRedEye>
+            </div>
+            <button
+              onClick={() => {
+                setPassword(password_generator(20));
+              }}
+              className="passwordGeneratorButton"
+            >
+              Generate
+            </button>
             <button onClick={handelAdd} className="addButton">
               Add
             </button>
@@ -161,6 +224,15 @@ export default function PasswordManager() {
       </div>
 
       <div className="passwordList column ">
+        {search.length > 0 && (
+          <button
+            type="button"
+            onClick={() => setSearch("")}
+            className="resetButton"
+          >
+            Reset search
+          </button>
+        )}
         {passwords
           .filter((password) =>
             password.name

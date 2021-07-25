@@ -63,7 +63,7 @@ export default function PasswordRow({ props, refresh, showSnackBar }) {
     }
   }
   const imageUrl =
-    props.url === undefined
+    props.url === undefined || props.url === ""
       ? "jonas-strabel.de"
       : props.url.replace("https://", "");
 
