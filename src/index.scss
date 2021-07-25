@@ -52,7 +52,7 @@ input {
 
 .innerDiv {
   background-color: $secondaryColor;
-  width: 60vw;
+  max-width: 1000px;
   height: 200vh;
   padding: 30px;
 }
@@ -175,6 +175,52 @@ $btnColor: #00bfff;
   width: 120px;
   color: white;
   background-color: #81a1c1;
+  border-radius: 5px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  padding: 5px;
+  font-weight: 500;
+}
+
+.authContainer {
+  max-width: 900px;
+  margin-bottom: 20px;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  background-color: $bg-color;
+  border-radius: 5px;
+}
+
+.signInInput {
+  width: 100%;
+}
+
+.signInContainer {
+  width: 100%;
+}
+
+.signOutButton {
+  width: 120px;
+  color: white;
+  background-color: #b197fc;
+  border-radius: 5px;
+  padding: 15px;
+  padding-top: 5px;
+  font-weight: 500;
+}
+
+.signOutContainer {
+  margin-top: 0px;
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 15px;
+}
+
+.signInButton {
+  width: 120px;
+  color: white;
+  background-color: #7950f2;
   border-radius: 5px;
   margin-top: 10px;
   margin-bottom: 10px;

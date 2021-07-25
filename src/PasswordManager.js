@@ -8,6 +8,7 @@ import Snackbar from "@material-ui/core/Snackbar";
 import { v4 as uuidv4 } from "uuid";
 import { REACT_APP_API } from "./constants";
 import PasswordRow from "./components/passwordRow";
+import Auth from "./auth";
 
 const API = REACT_APP_API;
 
@@ -136,6 +137,7 @@ export default function PasswordManager() {
 
   return (
     <div className="innerDiv column">
+      <Auth></Auth>
       <Collapsible label="New Password">
         <div className="inputContainer">
           <div className="urlAndName row">
