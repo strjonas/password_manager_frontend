@@ -1,13 +1,7 @@
 import React from "react";
 import "./passwordRow.scss";
 import { useState, useEffect } from "react";
-import {
-  MdRemoveRedEye,
-  MdMoreVert,
-  MdDelete,
-  MdModeEdit,
-  MdClose,
-} from "react-icons/md";
+import { MdRemoveRedEye, MdMoreVert, MdDelete, MdClose } from "react-icons/md";
 import { REACT_APP_API } from "../constants";
 
 export default function PasswordRow({ props, refresh, showSnackBar }) {
@@ -31,11 +25,7 @@ export default function PasswordRow({ props, refresh, showSnackBar }) {
 
   async function deleteEntity() {
     try {
-      const res = await fetch(
-        `${REACT_APP_API}/delpasswords/${props.id}/${localStorage.getItem(
-          "key"
-        )}`
-      );
+      const res = await fetch(`${REACT_APP_API}/delpasswords/${props.id}`);
       const data = await res.text();
       if (data === "success") {
         showSnackBar("successfully deleted");
@@ -49,9 +39,9 @@ export default function PasswordRow({ props, refresh, showSnackBar }) {
     hideDropdownFunc();
     refresh();
   }
-  function modifyEntity() {
-    hideDropdownFunc();
-  }
+  // function modifyEntity() {
+  //   hideDropdownFunc();
+  // }
 
   async function getPassword() {
     try {
@@ -97,10 +87,17 @@ export default function PasswordRow({ props, refresh, showSnackBar }) {
     </div>
   );
 
+  //  <div onClick={modifyEntity} className="edit row">
+  //   <MdModeEdit className="editIcon"> </MdModeEdit>
+  //   Edit
+  // </div>
+
   return (
     <>
       <div className="mainContainer">
-        <div className="row container">
+        <div
+          className={`container ${window.innerWidth > 800 ? "row" : "column"}`}
+        >
           {Image}
           {Name}
           <div className="column">
@@ -123,10 +120,6 @@ export default function PasswordRow({ props, refresh, showSnackBar }) {
           ></MdMoreVert>
           {showDropdown && (
             <div className="dropdownMenu column">
-              <div onClick={modifyEntity} className="edit row">
-                <MdModeEdit className="editIcon"> </MdModeEdit>
-                Edit
-              </div>
               <div onClick={deleteEntity} className="delete row">
                 <MdDelete className="deleteIcon"> </MdDelete>
                 Delete

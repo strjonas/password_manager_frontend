@@ -41,6 +41,7 @@ export default function PasswordManager() {
 
   useEffect(() => {
     getPasswords();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   function onNameChange(e) {
@@ -162,7 +163,11 @@ export default function PasswordManager() {
       <Auth refresh={getPasswords}></Auth>
       <Collapsible label="New Password">
         <div className="inputContainer">
-          <div className="urlAndName row">
+          <div
+            className={`urlAndName ${
+              window.innerWidth > 500 ? "row" : "column"
+            }`}
+          >
             <input
               value={name}
               onChange={onNameChange}
@@ -178,38 +183,40 @@ export default function PasswordManager() {
               onChange={onUrlChange}
             ></input>
           </div>
-          <div className="row">
-            <input
-              onKeyPress={(e) => onkeypress(e)}
-              value={password}
-              onChange={onPasswordChange}
-              placeholder="password"
-              type="password"
-              id="passwordInput"
-              className="passwordInput"
-            ></input>
-            <div className="passwordShowAddDiv">
-              <MdRemoveRedEye
-                onClick={() => {
-                  function show() {
-                    var p = document.getElementById("passwordInput");
-                    p.setAttribute("type", "text");
-                  }
+          <div className={`${window.innerWidth > 500 ? "row" : "column"}`}>
+            <div className="row">
+              <input
+                onKeyPress={(e) => onkeypress(e)}
+                value={password}
+                onChange={onPasswordChange}
+                placeholder="password"
+                type="password"
+                id="passwordInput"
+                className="passwordInput"
+              ></input>
+              <div className="passwordShowAddDiv">
+                <MdRemoveRedEye
+                  onClick={() => {
+                    function show() {
+                      var p = document.getElementById("passwordInput");
+                      p.setAttribute("type", "text");
+                    }
 
-                  function hide() {
-                    var p = document.getElementById("passwordInput");
-                    p.setAttribute("type", "password");
-                  }
-                  if (pwShow === 0) {
-                    setPwShow(1);
-                    show();
-                  } else {
-                    setPwShow(0);
-                    hide();
-                  }
-                }}
-                className="showPasswordAdd"
-              ></MdRemoveRedEye>
+                    function hide() {
+                      var p = document.getElementById("passwordInput");
+                      p.setAttribute("type", "password");
+                    }
+                    if (pwShow === 0) {
+                      setPwShow(1);
+                      show();
+                    } else {
+                      setPwShow(0);
+                      hide();
+                    }
+                  }}
+                  className="showPasswordAdd"
+                ></MdRemoveRedEye>
+              </div>
             </div>
             <button
               onClick={() => {
